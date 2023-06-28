@@ -1,33 +1,111 @@
-{% extends "shared/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Демо-страница</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
 
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-{% block title %}
-  <title>Job Board</title>
-{% endblock %}
+        #userKey {
+            padding: 10px;
+            margin: 10px 0;
+        }
 
-{% block content %}
-  {% with msg=msg %}
-    {% include "components/alerts.html" %}
-  {% endwith %}
-  <div class="container">
-  <div class="row">
-    <div class="col">
-      <h1 class="display-5">Find Jobs..</h1>
+        button {
+            padding: 10px 20px;
+            margin: 10px 0;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+            text-align: left;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .profit-up {
+            color: green;
+        }
+
+        .profit-down {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Введите свой ключ</h1>
+        <input type="text" id="userKey">
+        <button onclick="fetchData()">Получить информацию</button>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>FIGI</th>
+                    <th>Instrument Type</th>
+                    <th>Buy Price</th>
+                    <th>Current Price</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
-  </div>
-  <div class="row">
-      {% for job in jobs %}
-        <div class="col-lg-4 col-md-3 col-sm-10 mr-auto">
-          {% with obj=job %}
-      		{% include "components/cards.html" %}
-    	    {% endwith %}
+    <script>
+        async function fetchData() {
+            const key = document.getElementById('userKey').value;
+            const response = await fetch(`/token/${key}`);
+            const data = await response.json();
+            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
 
-          {% if loop.index %3 %}
-            </div>
-          {% else %}
-            </div></div><br><div class="row">
-          {% endif %}
-      {% endfor %}
-  </div>
-</div>
-{% endblock %}
+            for (const item of data) {
+                const row = document.createElement('tr');
+
+                for (const [key, value] of Object.entries(item)) {
+                    if (key !== 'profit') {
+                        const cell = document.createElement('td');
+                        cell.textContent = value;
+                        row.appendChild(cell);
+                    } else {
+                        const cell = document.createElement('td');
+                        cell.innerHTML = value > 0
+                            ? `<span class="profit-up">&#9650; ${value}</span>`
+                            : `<span class="profit-down">&#9660; ${value}</span>`;
+                        row.appendChild(cell);
+                    }
+                }
+
+                tableBody.appendChild(row);
+            }
+        }
+    </script>
+</body>
+</html>

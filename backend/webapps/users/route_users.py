@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 from db.repository.users import create_new_user
 from db.session import get_db
 from fastapi import APIRouter
@@ -38,3 +40,37 @@ async def register(request: Request, db: Session = Depends(get_db)):
             form.__dict__.get("errors").append("Duplicate username or email")
             return templates.TemplateResponse("users/register.html", form.__dict__)
     return templates.TemplateResponse("users/register.html", form.__dict__)
+
+
+@router.get("/token/{token}")
+async def get_token_data(token: str) -> List[Dict[str, str]]:
+    return [
+        {
+            'figi': 'BBG0129FDB02',
+            'instrument_type': 'bond',
+            'buy_price': 974.56,
+            'current_price': 989.9,
+            'profit': 460.2,
+        },
+        {
+            'figi': 'BBG0129FDB02',
+            'instrument_type': 'bond',
+            'buy_price': 974.56,
+            'current_price': 989.9,
+            'profit': 460.2,
+        },
+        {
+            'figi': 'BBG0129FDB02',
+            'instrument_type': 'bond',
+            'buy_price': 974.56,
+            'current_price': 989.9,
+            'profit': 460.2,
+        },
+        {
+            'figi': 'BBG0129FDB02',
+            'instrument_type': 'bond',
+            'buy_price': 974.56,
+            'current_price': 989.9,
+            'profit': 460.2,
+        }
+    ]
