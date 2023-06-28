@@ -57,14 +57,14 @@ async def get_token_data(token: str) -> List[Dict[str, str]]:
             'instrument_type': 'bond',
             'buy_price': 974.56,
             'current_price': 989.9,
-            'profit': 460.2,
+            'profit': -460.2,
         },
         {
             'figi': 'BBG0129FDB02',
             'instrument_type': 'bond',
             'buy_price': 974.56,
             'current_price': 989.9,
-            'profit': 460.2,
+            'profit': -460.2,
         },
         {
             'figi': 'BBG0129FDB02',
